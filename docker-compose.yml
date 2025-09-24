@@ -1,4 +1,9 @@
 version: '3.9'
+
+networks:
+  laravel-kf:
+    driver: bridge
+
 services:
   webserver:
     image: nginx:latest
@@ -33,6 +38,3 @@ services:
     networks:
       - laravel-kf
     
-networks:
-  laravel-kf:
-    driver: bridge
