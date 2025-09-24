@@ -1,0 +1,39 @@
+version: '3.9'
+services:
+  webserver:
+    image: nginx:latest
+    container_name: webserver_kf
+    restart: always
+    tty: true
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    links:
+      - php
+    networks:
+      - network_kf-docker
+  
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: php:8.2-fpm
+    container_name: php_kf
+    restart: always
+    tty: true
+    environment:
+      SERVICE_NAME: php
+      SERVICE_TAGS: dev
+    working_dir: /var/www/
+    volumes:
+      - ./src:/var/www/
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - network_kf-docker
+      
+
+networks:
+  network_kf-docker:
+    driver: bridge
