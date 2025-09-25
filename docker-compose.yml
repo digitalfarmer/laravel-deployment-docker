@@ -27,7 +27,6 @@ services:
     environment:
       SERVICE_NAME: php
       SERVICE_TAGS: dev
-    
     working_dir: /var/www
     volumes:
       - ./src:/var/www
