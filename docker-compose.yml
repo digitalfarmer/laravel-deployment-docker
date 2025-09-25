@@ -1,40 +1,41 @@
 version: '3.9'
 
-networks:
-  laravel-kf:
-    driver: bridge
-
 services:
   webserver:
     image: nginx:latest
-    container_name: webserver_kf
-    restart: always
+    container_name: webserver_docker
+    restart: unless-stopped
     tty: true
     ports:
-      - "8003:80"
+      - "8080:80"
     volumes:
-      - ./src:/var/www/
+      - ./src:/var/www
       - ./nginx/conf.d:/etc/nginx/conf.d
     links:
       - php
     networks:
-      - laravel-kf
-  
+      - laravel_docker-network
+
   php:
     build:
       context: .
       dockerfile: Dockerfile
     image: php:8.2-fpm
-    container_name: php_kf
-    restart: always
+    container_name: php_docker
+    restart: unless-stopped
     tty: true
     environment:
       SERVICE_NAME: php
       SERVICE_TAGS: dev
-    working_dir: /var/www/
-    volumes:
-      - ./src:/var/www/
-      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
-    networks:
-      - laravel-kf
     
+    working_dir: /var/www
+    volumes:
+      - ./src:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+
+    networks:
+      - laravel_docker-network
+
+networks:
+  laravel_docker-network:
+    driver: bridge
